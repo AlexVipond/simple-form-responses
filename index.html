@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Form Responses</title>
+
+        <meta charset="utf-8">
+        <meta name="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="my.css">
+        <meta name="author" content="Alex Vipond">
+    </head>
+
+    <body>
+        <header class="jumbotron-fluid bg-secondary p-5">
+            <div class="container-fluid">
+                <h1 class="text-light">Access Simple Form Responses</h1>
+                <p class="text-light lead">Download as a CSV</p>
+            </div>
+        </header>
+        <main class="container-fluid p-5">
+            <form class="mb-5">
+                <div class="form-group">
+                    <label class="mr-sm-2" for="api-token">API Token</label>
+                    <input id="api-token" class="col-5" type="text" name="api-token" value="" aria-describedby="api-token-description" required/>
+                    <small id="api-token-description" class="form-text text-muted mb-4">This is the secret API Token that you use to access your Simple Form responses.</small>
+                    <input id="show-table-checkbox" type="checkbox" name="" value="checkbox">
+                    <label for="show-table-checkbox" class="mr-sm-2">Show table</label>
+                    <small id="api-token-description" class="form-text text-muted mb-4">If the page crashes, there's too much data for a table. Refresh the page and leave this box unchecked.</small>
+                </div>
+                <button id="submit-api-token" class="btn btn-primary" type="submit" name="submit-api-token">Submit</button>
+            </form>
+            <div id="download-button"></div>
+            <article>
+                <input id="search-input" class="mb-2" type="text" name="" value="" placeholder="Type to search..." onkeyup="searchTable()" />
+                <table id="search-table" class="table table-hover table-responsive">
+                    <tbody id="results-wrapper">
+                    </tbody>
+                </table>
+            </article>
+        </main>
+
+        <script src="https://cdn.rawgit.com/mholt/PapaParse/master/papaparse.min.js"></script>
+        <script src="get-simple-form-responses.js"></script>
+        <script src="search-table.js">
+
+        </script>
+    </body>
+</html>
