@@ -35,8 +35,8 @@ function getTableData(responsesJSON) {
     });
 }
 
-function getTableDataKeys(parsedResponsesJSON) {
-    parsedResponsesJSON.forEach(function(response) {
+function getTableDataKeys(parsedResponses) {
+    parsedResponses.forEach(function(response) {
         tableDataKeys.push(...Object.keys(response));
     });
 
@@ -45,7 +45,6 @@ function getTableDataKeys(parsedResponsesJSON) {
             tableDataKeys
         )
     );
-    console.log(tableDataKeys);
 }
 
 function orderReverseChronologically(thisResponse, nextResponse) {
@@ -61,15 +60,15 @@ function orderReverseChronologically(thisResponse, nextResponse) {
 }
 
 // TODO: Merge duplicate records and show total records on page
-function mergeDuplicates(parsedResponsesJSON) {
+function mergeDuplicates(parsedResponses) {
     let uniqueEmails = Array.from(
         new Set(
-            parsedResponsesJSON.map(response => response[emailPropertyKey])
+            parsedResponses.map(response => response[emailPropertyKey])
         )
     );
 
     function countEmailOccurrences(email) {
-        return parsedResponsesJSON.filter(response => response.email === email).length;
+        return parsedResponses.filter(response => response.email === email).length;
     }
 
     uniqueEmails = uniqueEmails.map(function(email) {
@@ -123,13 +122,11 @@ function mergeDuplicates(parsedResponsesJSON) {
         return email;
     });
 
-    console.log(mergedDuplicates);
-
     tableData = [...tableData, ...mergedDuplicates].sort(function(a, b) {
         return orderReverseChronologically(a, b);
     });
 
-    console.log(tableData);
+    console.log(tableData.length);
 }
 
 function addHeadersToTable() {
@@ -160,7 +157,20 @@ function parseData(responsesJSON) {
     getTableDataKeys(tableData);
 }
 
-function generateTable(responsesJSON) {
+function cleanData(parsedResponses) {
+    function replaceUndefined(response, property) {
+        if(response[property] === undefined) {
+            response[property] = '';
+        }
+    }
+    
+    parsedResponses.forEach(function(response) {
+        replaceUndefined(response, 'first-name');
+        replaceUndefined(response, 'last-name');
+    });
+}
+
+function generateTable(parsedResponses) {
     if (showTableCheckbox.checked) {
         addHeadersToTable();
         addDataToTable();
@@ -180,6 +190,7 @@ request.onload = function() {
         responses = JSON.parse(this.responseText);
         responses = filterBlankEmails(responses);
         parseData(responses);
+        cleanData(tableData);
         mergeDuplicates(tableData);
         generateTable(responses);
         downloadData = Papa.unparse(tableData);
