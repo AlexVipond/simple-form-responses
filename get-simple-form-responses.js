@@ -15,6 +15,10 @@ function filterBlankEmails(responsesJSON) {
     return responsesJSON.filter(response => response.data[emailPropertyKey] !== '');
 }
 
+function filterSpamEmails(responsesJSON) {
+  return responsesJSON.filter(response => !/46\.161\.9\./.test(response.request_ip) && !response.data.unsubscribe_me);
+}
+
 function getTableHeaders(responsesJSON) {
     // Object.keys(responsesJSON[0].data).forEach(function(key) {
     //     tableHeaders.push(key);
@@ -163,7 +167,7 @@ function cleanData(parsedResponses) {
             response[property] = '';
         }
     }
-    
+
     parsedResponses.forEach(function(response) {
         replaceUndefined(response, 'first-name');
         replaceUndefined(response, 'last-name');
@@ -189,6 +193,7 @@ request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
         responses = JSON.parse(this.responseText);
         responses = filterBlankEmails(responses);
+        responses = filterSpamEmails(responses);
         parseData(responses);
         cleanData(tableData);
         mergeDuplicates(tableData);
